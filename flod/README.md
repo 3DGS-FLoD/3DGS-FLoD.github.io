@@ -1,16 +1,17 @@
 # FLoD
 
-This is the repository that contains source code for the [FLoD website]([https://](https://3dgs-flod.github.io/flod.github.io/)).
+This is the repository that contains source code for the [FLoD website]([https://](https://3dgs-flod.github.io/flod/)).
 
 If you find FLoD useful for your work please cite:
 ```
-@misc{seo2024flod
-  author        = {Seo, Yunji and Choi, Young Sun and Son, Hyun Seung and Uh, Youngjung},
-  title         = {FLoD},
-  year          = {2024},
-  eprint        = {2408.12894},
-  archivePrefix = {arXiv},
-  primaryClass  = {cs.CV},
+@article{seo2025flod,
+      author  = {Yunji Seo and Young Sun Choi and Hyun Seung Son and Youngjung Uh},
+      title   = {FLoD: Integrating Flexible Level of Detail into 3D Gaussian Splatting for Customizable Rendering},
+      journal = {ACM Transactions on Graphics (Proceedings of SIGGRAPH)},
+      number  = {4},
+      volume  = {44},
+      year    = {2025},
+      doi     = {10.1145/3731430}
 }
 ```
 
