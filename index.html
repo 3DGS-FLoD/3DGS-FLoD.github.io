@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="FLoD: Integrating Flexible Level of Detail into 3D Gaussian Splatting">
+  <meta name="keywords" content="FLoD">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FLoD: Integrating Flexible Level of Detail into 3D Gaussian Splatting for Customizable Rendering</title>
+
+  <!-- Bootstrap -->
+  <link rel="stylesheet" href="./static/css/bootstrap-4.4.1.css">
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'G-PYVRSFMDRL');
+  </script>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  
+  <link rel="stylesheet" href="./static/css/index.css">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+
+  <link rel="stylesheet" href="./static/css/dics.original.css">
+  <script src="./static/js/dics.original.js"></script>
+  <script src="./static/js/event_handler.js"></script>
+</head>
+<body>
+
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-1 publication-title">FLoD: Integrating Flexible Level of Detail into 3D Gaussian Splatting for Customizable Rendering</h1>
+          <h1 style="font-size:1.5rem; margin-bottom: 1.6rem"> ACM Transactions on Graphics (SIGGRAPH 2025) </h1>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              Yunji Seo*,</span>
+            <span class="author-block">
+              Young Sun Choi*,</span>
+            <span class="author-block">
+              Hyun Seung Son,</span>
+            <span class="author-block">
+              <a href="https://vilab.yonsei.ac.kr/members/professor"> Youngjung Uh</a></span>
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">Yonsei University</span>
+          </div>
+          
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <!-- PDF Link. -->
+              <span class="link-block">
+                <a href="https://arxiv.org/pdf/2408.12894v1"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                  </span>
+                  <span>Paper</span>
+                </a>
+              </span>
+              <span class="link-block">
+                <a href="https://arxiv.org/abs/2408.12894"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                  </span>
+                  <span>arXiv</span>
+                </a>
+              </span>
+              <!-- Code Link. -->
+              <span class="link-block">
+                <a href="https://github.com/3DGS-FLoD/flod"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code</span>
+                  </a>
+              </span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- demo video -->
+<section class="hero is-light is-small">
+  <div class="hero-body">
+    <div class="container">
+      <div id="results-carousel" class="carousel results-carousel">
+        <div class="item">
+          <video poster="" id="garden" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/garden.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item">
+          <video poster="" id="stump" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/stump.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item">
+          <video poster="" id="train" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/train.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item">
+          <video poster="" id="ce060" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/ce060.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+      </div>
+      <p style="text-align: center;">
+        The videos above demonstrate the results of 3DGS and our method (3DGS-FLoD) running on a <b>laptop equipped with an NVIDIA GeForce MX250 2GB GPU</b>.<br>
+        Our method enables customizable and memory-efficient rendering across various hardware configurations.
+      </p>  
+    </div>
+  </div>
+</section>
+
+<!-- Abstract. -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            3D Gaussian Splatting (3DGS) and its subsequent works are <b>restricted to specific hardware setups</b>, either on only low-cost or on only high-end configurations. 
+            Approaches aimed at reducing 3DGS memory usage enable rendering on low-cost GPU but compromise rendering quality, which fails to leverage the hardware capabilities in the case of higher-end GPU. 
+            Conversely, methods that enhance rendering quality require high-end GPU with large VRAM, making such methods impractical for lower-end devices with limited memory capacity. 
+          </p>
+          <p>
+            To overcome this limitation, <b>we propose Flexible Level of Detail (FLoD)</b> for 3DGS. 
+            FLoD constructs a multi-level 3DGS representation through <b>level-specific 3D scale constraints</b>, where each level independently reconstructs the entire scene with varying detail and GPU memory usage. 
+            A <b>level-by-level training strategy</b> is introduced to ensure structural consistency across levels. 
+            Furthermore, the multi-level structure of FLoD allows <b>selective rendering</b> of image regions at different detail levels, providing additional memory-efficient rendering options. 
+            To our knowledge, among prior works which incorporate the concept of Level of Detail (LoD) with 3DGS, FLoD is the first to follow the core principle of LoD by offering adjustable options for a broad range of GPU settings.
+          </p>
+          <p>
+            Experiments demonstrate that <b>FLoD provides various rendering options with trade-offs between quality and memory usage</b>, enabling real-time rendering under diverse memory constraints. 
+            Furthermore, we show that <b>FLoD generalizes to different 3DGS frameworks</b>, indicating its potential for integration into future state-of-the-art developments.
+          </p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- method overview -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3">Method Overview</h2>
+        <div class="content has-text-justified">
+          <p></p>
+        </div>
+        <div class="content has-text-justified">
+          <img src="./static/images/method.png" style="margin-bottom: 10px; margin-top:10px;">
+
+          <p>
+            Training starts at level 1 with the given SfM points and proceeds to the maximum level. 
+            Each level's training includes applying a scale constraint to provide the appropriate detail for that level 
+            and performing overlap pruning to mitigate Gaussian overlap. 
+            Upon completing each level’s training, Gaussian clones are saved to create a multi-level Gaussian set. 
+            This set enables both high-quality rendering using the maximum level and 
+            efficient rendering through selective rendering by using multiple levels.
+          </p>
+
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- visualization for each level -->
+<section class="section">
+  <div class="container">
+    <div class="column is-centered has-text-centered">
+      <h2 class="title is-3">Rendering Different Levels</h2>
+      <div class="content has-text-justified">
+        <p style="text-align: center;">
+          Our method maintains the overall structure while providing level-appropriate details across each level.
+        </p>
+      </div>
+
+      <div class="content-wrapper" style="display: flex; justify-content: center;">
+        <div class="content" style="width: 70%;">
+          <ul class="nav nav-tabs nav-fill nav-justified" id="object-scale-recon">
+            <li class="nav-item">
+              <a class="nav-link active" onclick="objectSceneEvent(0)">Train</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" onclick="objectSceneEvent(1)">Truck</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" onclick="objectSceneEvent(2)">Kitchen</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" onclick="objectSceneEvent(3)">Bicycle</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" onclick="objectSceneEvent(4)">Park</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" onclick="objectSceneEvent(5)">Stream</a>
+            </li>
+          </ul>
+
+          <div class="b-dics level-visualization" style="font-weight: 600;">
+            <img src="./static/images/all_levels/train_Level1.jpg" alt="Level1">
+            <img src="./static/images/all_levels/train_Level2.jpg" alt="Level2">
+            <img src="./static/images/all_levels/train_Level3.jpg" alt="Level3">
+            <img src="./static/images/all_levels/train_Level4.jpg" alt="Level4">
+            <img src="./static/images/all_levels/train_Level5.jpg" alt="Level5">
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+
+<!-- visual comparsion level5 vs level543 -->
+<section class="section">
+  <div class="container ">
+    <div class=" has-text-centered">
+      <h2 class="title is-3">Selective Rendering</h2>
+      <div class="content has-text-justified">
+        <p style="text-align: center;">
+          Selecive rendering using levels 5, 4, and 3 from 3DGS-FLoD achieves visual quality comparable to using only level 5, while reducing the number of Gaussians by 40%.
+        </p>
+      </div>
+      <div class="columns is-centered">
+
+        <div class="column">
+            <div class="columns is-centered">
+              <div class="column content">
+                <div id="highlevel1" class="bal-container-small">
+
+                  <div class="bal-after">
+                    <img src="./static/images/high_levels/train_level5.jpg">
+                    <div class="bal-afterPosition afterLabel" style="z-index:1;">
+                      Level5
+                    </div>
+                  </div>
+
+                  <div class="bal-before" style="width:93.03030303030303%;">
+                    <div class="bal-before-inset">
+                      <img src="./static/images/high_levels/train_level543_sc1.jpg">
+                      <div class="bal-beforePosition beforeLabel">
+                        Level(5,4,3)
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="bal-handle" style="left:93.03030303030303%;">
+                    <span class=" handle-left-arrow"></span>
+                    <span class="handle-right-arrow"></span>
+                  </div>
+
+                </div>
+
+
+                <div id="highlevel2" class="bal-container-small">
+
+                  <div class="bal-after">
+                    <img src="./static/images/high_levels/9df87_level5.jpg">
+                    <div class="bal-afterPosition afterLabel" style="z-index:1;">
+                      Level5
+                    </div>
+                  </div>
+
+                  <div class="bal-before" style="width:75.45454545454545%;">
+                    <div class="bal-before-inset">
+                      <img src="./static/images/high_levels/9df87_level543_sc1.jpg">
+                      <div class="bal-beforePosition beforeLabel">
+                        Level(5,4,3)
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="bal-handle" style="left:75.45454545454545%;">
+                    <span class=" handle-left-arrow"></span>
+                    <span class="handle-right-arrow"></span>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+        </div>
+
+
+        <div class="column">
+          <div class="columns is-centered">
+            <div class="column content">
+
+              <div id="highlevel3" class="bal-container-small">
+                <div class="bal-after">
+                  <img src="./static/images/high_levels/stump_level5.jpg">
+                  <div class="bal-afterPosition afterLabel" style="z-index:1;">
+                    Level5
+                  </div>
+                </div>
+
+                <div class="bal-before" style="width:97.21030042918454%;">
+                  <div class="bal-before-inset">
+                    <img src="./static/images/high_levels/stump_level543_sc1.jpg">
+                    <div class="bal-beforePosition beforeLabel">
+                      Level(5,4,3)
+                    </div>
+                  </div>
+                </div>
+
+                <div class="bal-handle" style="left:97.21030042918454%;">
+                  <span class=" handle-left-arrow"></span>
+                  <span class="handle-right-arrow"></span>
+                </div>
+
+              </div>
+
+              <div id="highlevel4" class="bal-container-small">
+                <div class="bal-after">
+                  <img src="./static/images/high_levels/garden_level5.jpg">
+                  <div class="bal-afterPosition afterLabel" style="z-index:1;">
+                    Level5
+                  </div>
+                </div>
+
+                <div class="bal-before" style="width:34.39393939393939%;">
+                  <div class="bal-before-inset">
+                    <img src="./static/images/high_levels/garden_level543_sc1.jpg">
+                    <div class="bal-beforePosition beforeLabel">
+                      Level(5,4,3)
+                    </div>
+                  </div>
+                </div>
+
+                <div class="bal-handle" style="left:34.39393939393939%;">
+                  <span class=" handle-left-arrow"></span>
+                  <span class="handle-right-arrow"></span>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Selective rendering table -->
+<!-- <section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3">Flexible Rendering Options</h2>
+        <div class="content has-text-justified">
+          <p></p>
+        </div>
+        <div class="content has-text-justified">
+          <p style="text-align: center;">
+            Selective rendering gives you the flexibility to match rendering speed and memory use to your hardware.
+            The table below shows that selective rendering maintains better perceptual quality than using only lower levels, even with fewer Gaussians.
+          </p>
+
+          <img src="./static/images/table.png" style="margin-bottom: 10px;">
+
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</section> -->
+
+
+<!-- visual comparsion level5 -->
+<section class="section">
+  <div class="container ">
+    <div class=" has-text-centered">
+      <h2 class="title is-3">Visual Comparisons</h2>
+      <div class="content has-text-justified">
+        <p style="text-align: center;">
+          Comparison of the rendering results between Level 5 of 3DGS-FLoD and baseline models.
+        </p>
+      </div>
+      <div class="columns is-centered">
+
+        <div class="column">
+            <div class="columns is-centered">
+              <div class="column content">
+                <div id="viscomp1" class="bal-container-small">
+
+                  <div class="bal-after">
+                    <img src="./static/images/vis_level5/train_level5.jpg">
+                    <div class="bal-afterPosition afterLabel" style="z-index:1;">
+                      Ours
+                    </div>
+                  </div>
+
+                  <div class="bal-before" style="width:93.03030303030303%;">
+                    <div class="bal-before-inset">
+                      <img src="./static/images/vis_level5/train_3dgs.jpg">
+                      <div class="bal-beforePosition beforeLabel">
+                        3DGS
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="bal-handle" style="left:93.03030303030303%;">
+                    <span class=" handle-left-arrow"></span>
+                    <span class="handle-right-arrow"></span>
+                  </div>
+
+                </div>
+
+
+                <div id="viscomp2" class="bal-container-small">
+
+                  <div class="bal-after">
+                    <img src="./static/images/vis_level5/9f518d_level5.jpg">
+                    <div class="bal-afterPosition afterLabel" style="z-index:1;">
+                      Ours
+                    </div>
+                  </div>
+
+                  <div class="bal-before" style="width:75.45454545454545%;">
+                    <div class="bal-before-inset">
+                      <img src="./static/images/vis_level5/9f518d_mip.jpg">
+                      <div class="bal-beforePosition beforeLabel">
+                        Mip-Splatting
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="bal-handle" style="left:75.45454545454545%;">
+                    <span class=" handle-left-arrow"></span>
+                    <span class="handle-right-arrow"></span>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+        </div>
+
+
+        <div class="column">
+          <div class="columns is-centered">
+            <div class="column content">
+
+              <div id="viscomp3" class="bal-container-small">
+                <div class="bal-after">
+                  <img src="./static/images/vis_level5/aeb335_level5.jpg">
+                  <div class="bal-afterPosition afterLabel" style="z-index:1;">
+                    Ours
+                  </div>
+                </div>
+
+                <div class="bal-before" style="width:97.21030042918454%;">
+                  <div class="bal-before-inset">
+                    <img src="./static/images/vis_level5/aeb335_scaffold.jpg">
+                    <div class="bal-beforePosition beforeLabel">
+                      Scaffold-GS
+                    </div>
+                  </div>
+                </div>
+
+                <div class="bal-handle" style="left:97.21030042918454%;">
+                  <span class=" handle-left-arrow"></span>
+                  <span class="handle-right-arrow"></span>
+                </div>
+
+              </div>
+
+              <div id="viscomp4" class="bal-container-small">
+                <div class="bal-after">
+                  <img src="./static/images/vis_level5/kitchen_level5.jpg">
+                  <div class="bal-afterPosition afterLabel" style="z-index:1;">
+                    Ours
+                  </div>
+                </div>
+
+                <div class="bal-before" style="width:34.39393939393939%;">
+                  <div class="bal-before-inset">
+                    <img src="./static/images/vis_level5/kitchen_octree.jpg">
+                    <div class="bal-beforePosition beforeLabel">
+                      Octree-GS
+                    </div>
+                  </div>
+                </div>
+
+                <div class="bal-handle" style="left:34.39393939393939%;">
+                  <span class=" handle-left-arrow"></span>
+                  <span class="handle-right-arrow"></span>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+    <pre><code>@article{seo2025flod,
+      author  = {Yunji Seo and Young Sun Choi and Hyun Seung Son and Youngjung Uh},
+      title   = {FLoD: Integrating Flexible Level of Detail into 3D Gaussian Splatting for Customizable Rendering},
+      journal = {ACM Transactions on Graphics (Proceedings of SIGGRAPH)},
+      number  = {4},
+      volume  = {44},
+      year    = {2025},
+      doi     = {10.1145/3731430}
+}</code></pre>
+  </div>
+</section>
+
+
+<script src="./static/js/new.js"></script>
+
+
+<footer class="footer">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            We have built this page based on the project pages of <a href="https://nerfies.github.io/">Nerfies</a> and <a href="https://city-super.github.io/octree-gs/">Octree-GS</a>. We thank the authors for sharing their project page templates and source codes.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
+
+
+</body>
+</html>
